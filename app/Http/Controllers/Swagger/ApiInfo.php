@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Swagger;
 /**
  * @OA\Info(
  *     version="1.0.0",
- *     title="Book Store API",
- *     description="API для магазина книг с авторизацией и оплатой",
- *     @OA\Contact(email="your-email@example.com")
+ *     title="Phoenix API",
+ *     description="API documentation for Phoenix project"
  * )
  *
  * @OA\SecurityScheme(
