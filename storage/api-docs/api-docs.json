@@ -124,7 +124,7 @@
                                                 },
                                                 "role": {
                                                     "type": "string",
-                                                    "example": "user"
+                                                    "example": "admin"
                                                 }
                                             },
                                             "type": "object"
