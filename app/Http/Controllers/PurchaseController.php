@@ -51,12 +51,9 @@ class PurchaseController extends Controller
         $cardNumber = $data['card_number'];
 
         if ($cardNumber % 2 === 0) {
-            // Имитация успешной оплаты
-            // Можно сохранить заказ, но для упрощения — просто ответ
-
             return response()->json(['message' => 'Payment successful, book purchased']);
-        } else {
-            return response()->json(['message' => 'Payment failed'], 402);
         }
+
+        return response()->json(['message' => 'Payment failed'], 402);
     }
 }

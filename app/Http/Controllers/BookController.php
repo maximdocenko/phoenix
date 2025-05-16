@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 class BookController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('can:admin')->except(['index']);
+    }
+
     /**
      * @OA\Get(
      *     path="/api/books",
@@ -46,8 +51,6 @@ class BookController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorize('admin');
-
         $data = $request->validate([
             'title' => 'required|string',
             'photo' => 'required|string',
@@ -89,15 +92,15 @@ class BookController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->authorize('admin');
-
         $book = Book::findOrFail($id);
+
         $data = $request->validate([
             'title' => 'string',
             'photo' => 'string',
             'price' => 'numeric',
             'description' => 'string',
         ]);
+        
         $book->update($data);
 
         return response()->json($book);
@@ -123,8 +126,6 @@ class BookController extends Controller
 
     public function destroy($id)
     {
-        $this->authorize('admin');
-
         Book::destroy($id);
         return response()->json(null, 204);
     }
