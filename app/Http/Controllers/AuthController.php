@@ -32,7 +32,7 @@ class AuthController extends Controller
      *                 @OA\Property(property="id", type="integer", example=1),
      *                 @OA\Property(property="name", type="string", example="John Doe"),
      *                 @OA\Property(property="email", type="string", example="john@example.com"),
-     *                 @OA\Property(property="role", type="string", example="user")
+     *                 @OA\Property(property="role", type="string", example="admin")
      *             ),
      *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLC...")
      *         )
@@ -55,7 +55,7 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => 'user',
+            'role' => 'admin',
         ]);
 
         $token = JWTAuth::fromUser($user);
