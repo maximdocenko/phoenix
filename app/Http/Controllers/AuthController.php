@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 
 class AuthController extends Controller
 {
@@ -28,25 +30,21 @@ class AuthController extends Controller
      * )
      */
 
-    public function register(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
-
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role' => 'user',
-        ]);
-
-        $token = JWTAuth::fromUser($user);
-
-        return response()->json(compact('user', 'token'), 201);
-    }
+     public function register(RegisterRequest $request)
+     {
+         $data = $request->validated();
+ 
+         $user = User::create([
+             'name' => $data['name'],
+             'email' => $data['email'],
+             'password' => Hash::make($data['password']),
+             'role' => 'user',
+         ]);
+ 
+         $token = JWTAuth::fromUser($user);
+ 
+         return response()->json(compact('user', 'token'), 201);
+     }
 
     /**
      * @OA\Post(
@@ -67,19 +65,19 @@ class AuthController extends Controller
      * )
      */
 
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
-
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
-        }
-
-        $user = auth()->user();
-        if ($user->is_banned) {
-            return response()->json(['error' => 'User banned'], 403);
-        }
-
-        return response()->json(compact('token'));
-    }
+     public function login(LoginRequest $request)
+     {
+         $credentials = $request->validated();
+ 
+         if (!$token = JWTAuth::attempt($credentials)) {
+             return response()->json(['error' => 'Invalid credentials'], 401);
+         }
+ 
+         $user = auth()->user();
+         if ($user->is_banned) {
+             return response()->json(['error' => 'User banned'], 403);
+         }
+ 
+         return response()->json(compact('token'));
+     }
 }

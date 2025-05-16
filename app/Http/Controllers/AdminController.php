@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('can:admin');
+    }
+
     /**
      * @OA\Post(
      *     path="/api/admin/ban/{userId}",
@@ -29,8 +34,6 @@ class AdminController extends Controller
 
     public function banUser(Request $request, $userId)
     {
-        $this->authorize('admin');
-
         $user = User::findOrFail($userId);
         $user->is_banned = true;
         $user->save();
@@ -51,8 +54,6 @@ class AdminController extends Controller
 
     public function stats()
     {
-        $this->authorize('admin');
-
         $usersCount = User::count();
         $bannedCount = User::where('is_banned', true)->count();
         $booksCount = Book::count();
