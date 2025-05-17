@@ -78,7 +78,8 @@
                                 "required": [
                                     "name",
                                     "email",
-                                    "password"
+                                    "password",
+                                    "role"
                                 ],
                                 "properties": {
                                     "name": {
@@ -94,6 +95,15 @@
                                         "type": "string",
                                         "format": "password",
                                         "example": "secret123"
+                                    },
+                                    "role": {
+                                        "description": "User role (user or admin)",
+                                        "type": "string",
+                                        "enum": [
+                                            "user",
+                                            "admin"
+                                        ],
+                                        "example": "user"
                                     }
                                 },
                                 "type": "object"

@@ -36,21 +36,26 @@ class PurchaseController extends Controller
      */
 
      public function purchase(PurchaseRequest $request, $bookId)
-    {
-        $user = auth()->user();
-
-        if ($user->is_banned) {
-            return response()->json(['error' => 'User banned'], 403);
-        }
-
-        $book = Book::findOrFail($bookId);
-
-        $cardNumber = $data['card_number'];
-
-        if ($cardNumber % 2 === 0) {
-            return response()->json(['message' => 'Payment successful, book purchased']);
-        }
-
-        return response()->json(['message' => 'Payment failed'], 402);
-    }
+     {
+         $user = auth()->user();
+     
+         if ($user->is_banned) {
+             return response()->json(['error' => 'User banned'], 403);
+         }
+     
+         $book = Book::findOrFail($bookId);
+     
+         // Получаем данные из запроса
+         $data = $request->validated();
+     
+         $cardNumber = $data['card_number'];
+     
+         // Проверяем, четный ли номер карты
+         if ($cardNumber % 2 === 0) {
+             return response()->json(['message' => 'Payment successful, book purchased']);
+         }
+     
+         return response()->json(['message' => 'Payment failed'], 402);
+     }
+     
 }

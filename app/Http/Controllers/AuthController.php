@@ -18,10 +18,17 @@ class AuthController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"name", "email", "password"},
+     *             required={"name", "email", "password", "role"},
      *             @OA\Property(property="name", type="string", example="John Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="secret123")
+     *             @OA\Property(property="password", type="string", format="password", example="secret123"),
+     *             @OA\Property(
+     *                 property="role",
+     *                 type="string",
+     *                 enum={"user","admin"},
+     *                 example="user",
+     *                 description="User role (user or admin)"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -55,7 +62,7 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => 'admin',
+            'role' => $data['role'], // теперь из запроса
         ]);
 
         $token = JWTAuth::fromUser($user);

@@ -16,7 +16,7 @@ class PurchaseRequest extends FormRequest
     public function rules()
     {
         return [
-            'card_number' => 'required|digits_between:12,19',
+            'card_number' => 'required|digits:16',
         ];
     }
 
