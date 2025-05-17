@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{config('l5-swagger.documentations.'.$documentation.'.api.title')}}</title>
-    <link rel="stylesheet" type="text/css" href="{{ l5_swagger_asset($documentation, 'swagger-ui.css') }}">
+    <link rel="stylesheet" type="text/css" href="/docs/asset/swagger-ui.css">
     <link rel="icon" type="image/png" href="{{ l5_swagger_asset($documentation, 'favicon-32x32.png') }}" sizes="32x32"/>
     <link rel="icon" type="image/png" href="{{ l5_swagger_asset($documentation, 'favicon-16x16.png') }}" sizes="16x16"/>
     <style>
@@ -119,14 +119,14 @@
 <body @if(config('l5-swagger.defaults.ui.display.dark_mode')) id="dark-mode" @endif>
 <div id="swagger-ui"></div>
 
-<script src="{{ l5_swagger_asset($documentation, 'swagger-ui-bundle.js') }}"></script>
-<script src="{{ l5_swagger_asset($documentation, 'swagger-ui-standalone-preset.js') }}"></script>
+<script src="/docs/asset/swagger-ui-bundle.js"></script>
+<script src="/docs/asset/swagger-ui-standalone-preset.js"></script>
 <script>
     window.onload = function() {
         // Build a system
         const ui = SwaggerUIBundle({
             dom_id: '#swagger-ui',
-            url: "{!! $urlToDocs !!}",
+            url: "https://3d0c-82-215-101-204.ngrok-free.app/docs?api-docs.json",
             operationsSorter: {!! isset($operationsSorter) ? '"' . $operationsSorter . '"' : 'null' !!},
             configUrl: {!! isset($configUrl) ? '"' . $configUrl . '"' : 'null' !!},
             validatorUrl: {!! isset($validatorUrl) ? '"' . $validatorUrl . '"' : 'null' !!},

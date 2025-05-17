@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
+use App\Http\Requests\PurchaseRequest;
 
 class PurchaseController extends Controller
 {
@@ -34,7 +35,7 @@ class PurchaseController extends Controller
      * )
      */
 
-    public function purchase(Request $request, $bookId)
+     public function purchase(PurchaseRequest $request, $bookId)
     {
         $user = auth()->user();
 
@@ -43,10 +44,6 @@ class PurchaseController extends Controller
         }
 
         $book = Book::findOrFail($bookId);
-
-        $data = $request->validate([
-            'card_number' => 'required|digits_between:12,19',
-        ]);
 
         $cardNumber = $data['card_number'];
 
