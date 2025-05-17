@@ -273,7 +273,7 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "required": [
                                     "title",
@@ -286,8 +286,9 @@
                                         "type": "string"
                                     },
                                     "photo": {
-                                        "description": "URL or path to book photo",
-                                        "type": "string"
+                                        "description": "Book image file",
+                                        "type": "string",
+                                        "format": "binary"
                                     },
                                     "price": {
                                         "type": "number",
@@ -337,14 +338,16 @@
                 "requestBody": {
                     "required": false,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "properties": {
                                     "title": {
                                         "type": "string"
                                     },
                                     "photo": {
-                                        "type": "string"
+                                        "description": "Book image file",
+                                        "type": "string",
+                                        "format": "binary"
                                     },
                                     "price": {
                                         "type": "number",

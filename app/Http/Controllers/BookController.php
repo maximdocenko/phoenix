@@ -22,7 +22,6 @@ class BookController extends Controller
      *     @OA\Response(response=200, description="List of books")
      * )
      */
-
     public function index()
     {
         return Book::all();
@@ -36,29 +35,38 @@ class BookController extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(
-     *             required={"title","photo","price","description"},
-     *             @OA\Property(property="title", type="string"),
-     *             @OA\Property(property="photo", type="string", description="URL or path to book photo"),
-     *             @OA\Property(property="price", type="number", format="float"),
-     *             @OA\Property(property="description", type="string")
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"title","photo","price","description"},
+     *                 @OA\Property(property="title", type="string"),
+     *                 @OA\Property(property="photo", type="string", format="binary", description="Book image file"),
+     *                 @OA\Property(property="price", type="number", format="float"),
+     *                 @OA\Property(property="description", type="string")
+     *             )
      *         )
      *     ),
      *     @OA\Response(response=201, description="Book created"),
      *     @OA\Response(response=403, description="Forbidden")
      * )
      */
-
     public function store(Request $request)
     {
         $data = $request->validate([
             'title' => 'required|string',
-            'photo' => 'required|string',
+            'photo' => 'required|image|max:2048', // max 2MB
             'price' => 'required|numeric',
             'description' => 'required|string',
         ]);
 
+        // Сохраняем файл в storage/app/public/books
+        $path = $request->file('photo')->store('books', 'public');
+        $data['photo'] = $path;
+
         $book = Book::create($data);
+
+        // Добавляем URL к фото (опционально)
+        $book->photo_url = asset('storage/' . $path);
 
         return response()->json($book, 201);
     }
@@ -77,11 +85,14 @@ class BookController extends Controller
      *     ),
      *     @OA\RequestBody(
      *         required=false,
-     *         @OA\JsonContent(
-     *             @OA\Property(property="title", type="string"),
-     *             @OA\Property(property="photo", type="string"),
-     *             @OA\Property(property="price", type="number", format="float"),
-     *             @OA\Property(property="description", type="string")
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(property="title", type="string"),
+     *                 @OA\Property(property="photo", type="string", format="binary", description="Book image file"),
+     *                 @OA\Property(property="price", type="number", format="float"),
+     *                 @OA\Property(property="description", type="string")
+     *             )
      *         )
      *     ),
      *     @OA\Response(response=200, description="Book updated"),
@@ -89,19 +100,25 @@ class BookController extends Controller
      *     @OA\Response(response=403, description="Forbidden")
      * )
      */
-
     public function update(Request $request, $id)
     {
         $book = Book::findOrFail($id);
 
         $data = $request->validate([
             'title' => 'string',
-            'photo' => 'string',
+            'photo' => 'image|max:2048',
             'price' => 'numeric',
             'description' => 'string',
         ]);
-        
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('books', 'public');
+            $data['photo'] = $path;
+        }
+
         $book->update($data);
+
+        $book->photo_url = asset('storage/' . $book->photo);
 
         return response()->json($book);
     }
@@ -123,7 +140,6 @@ class BookController extends Controller
      *     @OA\Response(response=403, description="Forbidden")
      * )
      */
-
     public function destroy($id)
     {
         Book::destroy($id);
